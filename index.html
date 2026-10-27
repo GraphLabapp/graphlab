@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphLab | Simulador de grafos</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">G</div><div><h1>GraphLab</h1><p>SIMULADOR DE TEORÍA DE GRAFOS</p></div></div>
+ <div class="header-right">
+   <button id="presetBtn" class="active">Ejercicio de la pizarra</button>
+   <button id="newGraphBtn">Nuevo grafo</button>
+   <button id="importExcelBtn" style="background:#065f46;border-color:#10b981">📊 Importar Excel</button>
+   <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display:none">
+ </div>
+</header>
+<main>
+ <section class="intro"><div><div class="eyebrow">Aprende haciendo</div><h2>Explora. Selecciona. Comprende.</h2><p>Visualiza grafos ponderados, consulta su matriz y aprende los algoritmos de Prim y Kruskal paso a paso.</p></div><span class="badge">● Funciona sin internet</span></section>
+ <div class="layout">
+  <section class="panel">
+   <div class="panel-head"><div><h3 id="visualTitle">Grafo ponderado · Ejercicio de clase</h3><small id="graphSubtitle">12 vértices · pesos de la fotografía</small></div><div class="tabs"><button id="graphTab" class="active">Grafo</button><button id="matrixTab">Matriz</button></div></div>
+   <div class="panel-body">
+    <div id="graphView">
+     <div class="toolbar">
+       <button id="runBtn" class="primary">▶ Resolver</button>
+       <button id="prevBtn">← Anterior</button>
+       <button id="nextBtn">Siguiente →</button>
+       <button id="resetBtn">Reiniciar</button>
+       <!-- BOTÓN RENOMBRADO -->
+       <button id="autoFormatBtn" style="background:#8b5cf6;border-color:#a78bfa">Ordenar</button>
+     </div>
+     <div class="graph-wrap" style="margin-top:12px"><svg id="graphSvg" viewBox="0 0 900 540" role="img" aria-label="Grafo ponderado interactivo"></svg></div>
+     <div class="drag-note">↔ Mover vértices: arrastra cualquier círculo a la posición que quieras.</div><div class="legend"><span><i class="dot" style="background:#50627c"></i>Sin revisar</span><span><i class="dot" style="background:#34d399"></i>Seleccionada</span><span><i class="dot" style="background:#fbbf24"></i>Paso actual</span><span><i class="dot" style="background:#fb7185"></i>Descartada por ciclo</span></div>
+     <div class="stats"><div class="stat"><span>Vértices</span><strong id="vertexCount">12</strong></div><div class="stat"><span>Aristas elegidas</span><strong id="chosenCount">0</strong></div><div class="stat"><span>Peso acumulado</span><strong id="totalWeight">0</strong></div></div>
+     <div class="step-box"><div class="step-number" id="stepNumber">LISTO PARA EMPEZAR</div><h4 id="stepTitle">Elige un algoritmo</h4><p id="stepText">Selecciona Prim o Kruskal en el panel de la derecha y pulsa "Resolver" para ver cada decisión.</p></div>
+    </div>
+    <div id="matrixView" class="hidden"><div class="section-title"><h3>Matriz de adyacencia ponderada</h3><button id="downloadMatrix" class="small-btn">Descargar CSV</button></div><div class="table-wrap"><table id="matrixTable" class="matrix"></table></div><div class="notice">Un 0 indica que no existe conexión directa. En esta aplicación los grafos son no dirigidos: la matriz es simétrica.</div></div>
+   </div>
+  </section>
+  <aside class="side-stack">
+   <section class="panel"><div class="panel-head"><h3>Configuración</h3><span class="pill">ALGORITMOS</span></div><div class="panel-body">
+    <div class="field"><span>Elige el algoritmo que quieres usar</span><div class="algorithm-options">
+      <button type="button" class="algorithm-card active" id="primOption"><strong>🌱 Prim</strong><span>Crece desde un vértice y añade la conexión más barata hacia uno nuevo.</span></button>
+      <button type="button" class="algorithm-card" id="kruskalOption"><strong>🔗 Kruskal</strong><span>Ordena las conexiones por peso y evita las que forman ciclos.</span></button>
+    </div><select id="algorithm" class="hidden-select" aria-label="Algoritmo"><option value="prim">Prim</option><option value="kruskal">Kruskal</option></select></div>
+    <div class="control-grid" style="margin-top:11px"><label class="field">Vértice inicial (Prim)<select id="startNode"></select></label><label class="field">Velocidad<select id="speed"><option value="manual">Manual</option><option value="slow">Lenta</option><option value="fast">Rápida</option></select></label></div>
+    <div class="notice" id="algorithmHelp">Prim comienza en un vértice y agrega la arista más barata que conecta un vértice nuevo.</div>
+   </div></section>
+   <section class="panel"><div class="panel-head"><h3>Registro de decisiones</h3><small id="progressText">0 pasos</small></div><div class="panel-body"><div id="edgeLog" class="edge-list"><div class="muted">Aquí aparecerán las conexiones aceptadas y descartadas.</div></div></div></section>
+   <section class="panel"><div class="panel-head"><h3>Editor de grafos</h3><span class="pill">LIBRE</span></div><div class="panel-body">
+    <p class="muted" style="font-size:13px;margin-top:0">Crea tu propio grafo o modifica el ejercicio. En modo edición, pulsa dos vértices para conectarlos.</p>
+    <div class="toolbar"><button id="addNodeBtn">＋ Añadir vértice</button><button id="editEdgesBtn">Conectar vértices</button><button id="deleteEdgeBtn">Eliminar arista</button></div>
+    <div class="editor-hint" id="editorHint">Arrastra los círculos para moverlos. Activa "Conectar vértices" para crear aristas.</div>
+    <div class="toolbar" style="margin-top:12px"><button id="clearBtn">Vaciar grafo</button><button id="restoreBtn">Restaurar ejercicio</button></div>
+   </div></section>
+  </aside>
+ </div>
+ <div class="footer">GraphLab · Herramienta educativa para aprender teoría de grafos · Prim y Kruskal</div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
