@@ -14,7 +14,11 @@
    <button id="presetBtn" class="active">Ejercicio de la pizarra</button>
    <button id="newGraphBtn">Nuevo grafo</button>
    <button id="importExcelBtn" style="background:#065f46;border-color:#10b981">📊 Importar Excel</button>
+   <!-- NUEVO BOTÓN DE FOTO -->
+   <button id="importImageBtn" style="background:#8b5cf6;border-color:#a78bfa">📷 Importar Foto (IA)</button>
+   
    <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display:none">
+   <input type="file" id="imageFileInput" accept="image/*" style="display:none">
  </div>
 </header>
 <main>
@@ -25,16 +29,25 @@
    <div class="panel-body">
     <div id="graphView">
      <div class="toolbar">
-       <button id="runBtn" class="primary">▶ Resolver</button>
-       <button id="prevBtn">← Anterior</button>
-       <button id="nextBtn">Siguiente →</button>
+       <button id="runBtn" class="primary" aria-label="Resolver">▶ Resolver</button>
+       <button id="prevBtn" aria-label="Paso anterior">← Anterior</button>
+       <button id="nextBtn" aria-label="Paso siguiente">Siguiente →</button>
        <button id="resetBtn">Reiniciar</button>
-       <!-- BOTÓN RENOMBRADO -->
        <button id="autoFormatBtn" style="background:#8b5cf6;border-color:#a78bfa">Ordenar</button>
      </div>
      <div class="graph-wrap" style="margin-top:12px"><svg id="graphSvg" viewBox="0 0 900 540" role="img" aria-label="Grafo ponderado interactivo"></svg></div>
-     <div class="drag-note">↔ Mover vértices: arrastra cualquier círculo a la posición que quieras.</div><div class="legend"><span><i class="dot" style="background:#50627c"></i>Sin revisar</span><span><i class="dot" style="background:#34d399"></i>Seleccionada</span><span><i class="dot" style="background:#fbbf24"></i>Paso actual</span><span><i class="dot" style="background:#fb7185"></i>Descartada por ciclo</span></div>
-     <div class="stats"><div class="stat"><span>Vértices</span><strong id="vertexCount">12</strong></div><div class="stat"><span>Aristas elegidas</span><strong id="chosenCount">0</strong></div><div class="stat"><span>Peso acumulado</span><strong id="totalWeight">0</strong></div></div>
+     <div class="drag-note">↔ Mover vértices: arrastra cualquier círculo a la posición que quieras.</div><div class="legend"><span><i class="dot" style="background:#50627c"></i>Sin revisar</span><span><i class="dot" style="background:#34d399"></i>Seleccionada</span><span><i class="dot" style="background:#fbbf24"></i>Paso actual</span><span><i class="dot" style="background:#fb7185"></i></span>Descartada por ciclo</span></div>
+     
+     <!-- SECCIÓN DE ESTADÍSTICAS ACTUALIZADA -->
+     <div class="stats">
+       <div class="stat"><span>Vértices</span><strong id="vertexCount">12</strong></div>
+       <div class="stat"><span>Aristas elegidas</span><strong id="chosenCount">0</strong></div>
+       <div class="stat"><span>Peso acumulado</span><strong id="totalWeight">0</strong></div>
+       <!-- NUEVAS TARJETAS -->
+       <div class="stat"><span>Peso mínimo del árbol</span><strong id="minMstWeight">-</strong></div>
+       <div class="stat"><span>Peso máximo del árbol</span><strong id="maxMstWeight">-</strong></div>
+     </div>
+
      <div class="step-box"><div class="step-number" id="stepNumber">LISTO PARA EMPEZAR</div><h4 id="stepTitle">Elige un algoritmo</h4><p id="stepText">Selecciona Prim o Kruskal en el panel de la derecha y pulsa "Resolver" para ver cada decisión.</p></div>
     </div>
     <div id="matrixView" class="hidden"><div class="section-title"><h3>Matriz de adyacencia ponderada</h3><button id="downloadMatrix" class="small-btn">Descargar CSV</button></div><div class="table-wrap"><table id="matrixTable" class="matrix"></table></div><div class="notice">Un 0 indica que no existe conexión directa. En esta aplicación los grafos son no dirigidos: la matriz es simétrica.</div></div>
@@ -51,10 +64,17 @@
    </div></section>
    <section class="panel"><div class="panel-head"><h3>Registro de decisiones</h3><small id="progressText">0 pasos</small></div><div class="panel-body"><div id="edgeLog" class="edge-list"><div class="muted">Aquí aparecerán las conexiones aceptadas y descartadas.</div></div></div></section>
    <section class="panel"><div class="panel-head"><h3>Editor de grafos</h3><span class="pill">LIBRE</span></div><div class="panel-body">
-    <p class="muted" style="font-size:13px;margin-top:0">Crea tu propio grafo o modifica el ejercicio. En modo edición, pulsa dos vértices para conectarlos.</p>
-    <div class="toolbar"><button id="addNodeBtn">＋ Añadir vértice</button><button id="editEdgesBtn">Conectar vértices</button><button id="deleteEdgeBtn">Eliminar arista</button></div>
-    <div class="editor-hint" id="editorHint">Arrastra los círculos para moverlos. Activa "Conectar vértices" para crear aristas.</div>
-    <div class="toolbar" style="margin-top:12px"><button id="clearBtn">Vaciar grafo</button><button id="restoreBtn">Restaurar ejercicio</button></div>
+    <p class="muted" style="font-size:13px;margin-top:0">Crea tu propio grafo o modifica el ejercicio.</p>
+    <div class="editor-grid">
+      <button id="addNodeBtn">＋ Añadir vértice</button>
+      <button id="editEdgesBtn">Conectar</button>
+      <button id="deleteEdgeBtn">Eliminar arista</button>
+      <button id="deleteNodeBtn">Eliminar vértice</button>
+      <!-- NUEVO BOTÓN -->
+      <button id="curveEdgeBtn" style="grid-column: span 2;">Curvar arista especial</button>
+    </div>
+    <div class="editor-hint" id="editorHint">Arrastra los círculos para moverlos. Activa "Conectar" y "Curvar" para crear una arista curva.</div>
+    <div class="toolbar" style="margin-top:12px;justify-content:center"><button id="clearBtn">Vaciar grafo</button><button id="restoreBtn">Restaurar ejercicio</button></div>
    </div></section>
   </aside>
  </div>
