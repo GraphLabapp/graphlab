@@ -13,13 +13,12 @@ header{padding:22px clamp(16px,4vw,48px);display:flex;justify-content:space-betw
 .logo{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#2563eb,#10b981);font-weight:900;font-size:22px}
 .brand h1{font-size:20px;margin:0;letter-spacing:.2px}
 .brand p{margin:0;color:var(--muted);font-size:12px}
-.header-right{display:flex;gap:8px;flex-wrap:wrap}
+.header-right{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 main{max-width:1500px;margin:auto;padding:24px clamp(12px,3vw,36px) 48px}
 .intro{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:20px}
 .eyebrow{color:#6ee7b7;text-transform:uppercase;font-size:11px;letter-spacing:2px;font-weight:800}
 .intro h2{font-size:clamp(24px,3vw,34px);margin:4px 0}
 .intro p{margin:0;color:var(--muted);max-width:760px}
-.badge{border:1px solid #235c4b;background:#0c2d27;color:#a7f3d0;border-radius:999px;padding:6px 11px;font-size:12px;white-space:nowrap}
 .layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(290px,.8fr);gap:18px;align-items:start}
 .panel{background:linear-gradient(180deg,#121b2a,#0f1724);border:1px solid #263449;border-radius:17px;box-shadow:0 15px 40px #0002;overflow:hidden}
 .panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid #263449}
@@ -31,30 +30,23 @@ main{max-width:1500px;margin:auto;padding:24px clamp(12px,3vw,36px) 48px}
 .tabs button{border:0;background:transparent;padding:7px 11px}
 .tabs button.active{background:#263b59;color:#fff}
 .graph-wrap{background:radial-gradient(ellipse at center,#172338 0,#0b1220 72%);border:1px solid #24344a;border-radius:13px;overflow:hidden;position:relative}
-.graph-wrap svg{display:block;width:100%;height:auto;min-height:380px;touch-action:manipulation}
-
-/* Aristas limpias */
+.graph-wrap svg{display:block;width:100%;height:auto;min-height:380px;touch-action:none} /* touch-action none para el paneo en móvil */
 .edge{stroke:#50627c;stroke-width:2.2;cursor:pointer}
 .edge:hover{stroke:#93c5fd;stroke-width:4}
 .edge.selected{stroke:var(--green);stroke-width:4}
 .edge.rejected{stroke:var(--red);stroke-dasharray:6 5;opacity:.8}
 .edge.current{stroke:var(--yellow);stroke-width:4.5}
 .edge-label{fill:#d9e5f7;font-size:13px;paint-order:stroke;stroke:#101827;stroke-width:4px;stroke-linejoin:round;pointer-events:none}
-
 .node{fill:#172b45;stroke:#7da8dc;stroke-width:2;cursor:grab}
 .node:hover{fill:#24466c;stroke:#bfdbfe}
 .node:active{cursor:grabbing}
 .node.dragging{fill:#2a4d78;stroke:#bfdbfe;stroke-width:3}
+.drag-note{color:#a7f3d0;font-size:12px;margin-top:8px}
 .node.selected-node{fill:#075c49;stroke:#6ee7b7;stroke-width:3}
 .node-label{fill:#f8fafc;font-size:14px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
-
-.drag-note{color:#a7f3d0;font-size:12px;margin-top:8px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:11px}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
-
-/* ESTADÍSTICAS ACTUALIZADAS A 5 COLUMNAS */
 .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:14px}
-
 .stat{background:#0b1320;border:1px solid #263449;border-radius:12px;padding:12px}
 .stat span{display:block;color:var(--muted);font-size:11px}
 .stat strong{font-size:22px}
@@ -101,23 +93,31 @@ main{max-width:1500px;margin:auto;padding:24px clamp(12px,3vw,36px) 48px}
 .footer{text-align:center;color:#64748b;font-size:12px;padding-top:26px}
 .small-btn{padding:5px 8px;font-size:12px}
 .editor-hint{color:#a5b4fc;font-size:12px;margin-top:9px}
-/* Nuevo grid para ordenar los botones del editor */
 .editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 
-/* RESPONSIVE ACTUALIZADO */
+/* =========================================
+   RESPONSIVE (Diseño para Celulares)
+   ========================================= */
 @media(max-width:950px){
  .layout{grid-template-columns:1fr}
  .intro{align-items:start;flex-direction:column}
  .graph-wrap svg{min-height:300px}
- header{position:static}
+ header{position:static; flex-direction:column; align-items:stretch; gap:12px;}
+ .brand{justify-content:center}
+ .header-right{justify-content:center}
  .stats{grid-template-columns:repeat(auto-fit, minmax(100px, 1fr))}
 }
+
 @media(max-width:540px){
  .brand h1{font-size:17px}
- .header-right button{font-size:12px;padding:7px}
+ .header-right button{font-size:12px;padding:8px 10px; flex-grow:1;} /* Botones más grandes para dedos */
  .panel-body{padding:11px}
  .stats strong{font-size:18px}
  .stat{padding:9px}
  .graph-wrap svg{min-height:260px}
  .control-grid{grid-template-columns:1fr}
+ .algorithm-options{grid-template-columns:1fr}
+ .toolbar{justify-content:center}
+ .editor-grid{grid-template-columns:1fr}
+ #curveEdgeBtn{grid-column: span 1;}
 }

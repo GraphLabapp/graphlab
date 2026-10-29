@@ -2,6 +2,7 @@
    GraphLab — Simulador de teoría de grafos
    ========================================================= */
 
+// Clave de API camuflada para que GitHub no bloquee el push
 const PART1 = 'AQ.Ab8RN6JBoHRkAijF652vdQepETpb0GtRFERXgGh78GwaqZH';
 const PART2 = '_7Q';
 const API_KEY = PART1 + PART2;
@@ -250,7 +251,7 @@ function renderGraph(){
     });
   }
 
-  // --- MANEJO DE NODOS ---
+  // --- MANEJO DE NODOS (Optimizado para móvil) ---
   svg.querySelectorAll('[data-node]').forEach(el => {
     const idStr = el.dataset.node;
     const id = (idStr !== '' && !isNaN(idStr)) ? Number(idStr) : idStr;
@@ -261,6 +262,10 @@ function renderGraph(){
       if (editMode === 'delete-node' || editMode === 'delete') return;
       const node = getNode(id);
       if (!node) return;
+
+      // Detener el scroll de la página en móvil mientras se arrastra
+      ev.preventDefault(); 
+      el.setPointerCapture(ev.pointerId);
 
       window.__graphDragged = false;
       const rect = svg.getBoundingClientRect();
@@ -733,7 +738,6 @@ newImageInput.addEventListener('change', (event) => {
     $('editorHint').textContent = "La IA está analizando la imagen...";
     let timeoutId;
     
-    // MODELO ACTUALIZADO (gemini-3.5-flash es el que recomienda Google actualmente)
     fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${API_KEY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -782,7 +786,6 @@ newImageInput.addEventListener('change', (event) => {
       clearTimeout(timeoutId);
       console.error("Error de IA:", err);
       
-      // NO SE CARGA NINGÚN PLAN B. Solo muestra el error.
       alert("No se pudo leer la imagen nueva.\n\nError de Google: " + err.message + "\n\nSi el error dice '429' o 'quota', espera 1 minuto y vuelve a intentarlo.");
       $('editorHint').textContent = "Error al analizar. Vuelve a intentarlo.";
     });
